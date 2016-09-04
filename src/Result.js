@@ -17,11 +17,11 @@ export class Result {
   }
 
   isOk () {
-    return !this.err
+    return this instanceof Ok
   }
 
   isErr () {
-    return !!this.err
+    return this instanceof Err
   }
 
 }
