@@ -27,8 +27,8 @@ test('booleanCallHandler() will yield a call instruction containing handleSucces
   // It can cause functions within the call instruction to get called early with bad arguments.
   // By default we wish to just return the effect without doing anything to it.
   const generator = booleanCallHandler(name)
-  let event = generator.next()
-  event = generator.next([ ok, err ])
+  generator.next()
+  const event = generator.next([ ok, err ])
   t.deepEqual(event.value, call(handleSuccess, ok))
 })
 

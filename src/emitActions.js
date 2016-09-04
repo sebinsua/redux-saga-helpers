@@ -9,17 +9,18 @@ export function toActionPutter (actionCreator) {
   function * actionPutter (value) {
     yield put(actionCreator(value))
   }
-  actionPutter.displayName = generateWrappedFunctionName(actionPutter, actionCreator)
+  actionPutter.displayName = generateWrappedFunctionName(actionPutter, actionCreator, `${actionCreator}`)
   return actionPutter
 }
 
 export function createEmitActions (successAction, errorAction) {
-  return function emitActions (fn) {
+  function emitActions (fn) {
     successAction = successAction || createAction(`${generateDefaultCallName(fn)}_SUCCESS`)
     errorAction = errorAction || createAction(`${generateDefaultCallName(fn)}_ERROR`)
-    const callHandler = createBooleanCallHandler(toActionPutter(successAction), toActionPutter(errorAction))
-    return callHandler(fn)
+    const booleanCallHandler = createBooleanCallHandler(toActionPutter(successAction), toActionPutter(errorAction))
+    return booleanCallHandler(fn)
   }
+  return emitActions
 }
 
 export const emitActions = createEmitActions(/* default fallback when we know fn */)
