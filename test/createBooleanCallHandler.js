@@ -7,9 +7,9 @@ import { call } from 'redux-saga/effects'
 
 function expectName (name) {
   if (name) {
-    return Promise.resolve(`Hello ${name}`).then(v => v)
+    return Promise.resolve(`Hello ${name}`)
   } else {
-    return Promise.reject('Uh oh!').then(v => v)
+    return Promise.reject('Uh oh!')
   }
 }
 
