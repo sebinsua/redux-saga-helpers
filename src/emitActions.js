@@ -6,7 +6,7 @@ import generateWrappedFunctionName from './generateWrappedFunctionName'
 import createBooleanCallHandler from './createBooleanCallHandler'
 
 export function toActionPutter (actionCreator) {
-  function* actionPutter (value) {
+  function * actionPutter (value) {
     yield put(actionCreator(value))
   }
   actionPutter.displayName = generateWrappedFunctionName(actionPutter, actionCreator)
