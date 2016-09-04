@@ -6,7 +6,7 @@ import match from './match'
 
 export function createMatchAsCallHandler (toHandles = {}) {
   function wrapFunctionWithMatchAsCallHandler (fn) {
-    function* matchAsCallHandler (...args) {
+    function * matchAsCallHandler (...args) {
       const result = yield call(toResult(fn), ...args)
       yield match(result).as(toHandles)
     }
