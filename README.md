@@ -22,6 +22,6 @@ function* loadProduct () {
   const errorAction = createAction('PRODUCT_REQUEST_FAILED')
   const emitProductActions = createEmitActions(successAction, errorAction)
 
-  yield call(emitProductActions(fetchProduct), 1))
+  yield call(emitProductActions(fetchProduct), 1)
 }
 ```
