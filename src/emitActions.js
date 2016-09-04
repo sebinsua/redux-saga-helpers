@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions'
-import { put } from 'redux-saga'
+import { put } from 'redux-saga/effects'
 
 import generateDefaultCallName from './generateDefaultCallName'
 import generateWrappedFunctionName from './generateWrappedFunctionName'

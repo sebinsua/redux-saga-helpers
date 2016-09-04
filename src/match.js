@@ -1,29 +1,32 @@
-import { call } from 'redux-saga'
-
-import { Ok, Err } from './Result'
+import { call } from 'redux-saga/effects'
 
 export default function match (result) {
   return {
-    * as (toHandles = {}) {
-      if (!toHandles[Ok] || !toHandles[Err]) {
+    as (toHandles = {}) {
+      if (!toHandles.Ok || !toHandles.Err) {
         throw new Error('match-as requires Ok and Err to be defined')
       }
 
       let handler, value
       if (result.isOk()) {
+        handler = toHandles.Ok
         value = result.ok
-        handler = toHandles[Ok]
       } else {
-        value = result.err
-        const defaultErrorHandler = toHandles[Err]
+        const defaultErrorHandler = toHandles.Err
         handler = defaultErrorHandler
         for (let handlerKey in toHandles) {
-          if (handlerKey && handlerKey.err instanceof result.err) {
+          if (handlerKey === 'Ok' || handlerKey === 'Err') {
+            continue
+          }
+          const errorToLookFor = handlerKey
+          const currentErrorName = result.err.name
+          if (currentErrorName === errorToLookFor) {
             handler = toHandles[handlerKey]
           }
         }
+        value = result.err
       }
-      yield call(handler, value)
+      return call(handler, value)
     }
   }
 }

@@ -1,4 +1,4 @@
-import { call } from 'redux-saga'
+import { call } from 'redux-saga/effects'
 
 import generateWrappedFunctionName from './generateWrappedFunctionName'
 import toResult from './toResult'
