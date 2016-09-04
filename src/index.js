@@ -5,4 +5,5 @@ export * from './toResult'
 export * from './Result'
 export * from './match'
 
-export default from './emitActions'
+import emitActions from './emitActions'
+export default emitActions
