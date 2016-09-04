@@ -1,0 +1,69 @@
+{
+  "name": "redux-saga-helpers",
+  "version": "0.0.1",
+  "description": "Error-handling for redux-saga",
+  "main": "dist/index.js",
+  "jsnext:main": "dist/index.es",
+  "entry": "src/index.js",
+  "directories": {
+    "src": "src/**/*",
+    "test": "test/**/*"
+  },
+  "scripts": {
+    "prepublish": "npm run build",
+    "test": "npm run test:lint && npm run test:unit",
+    "test:lint": "standard $npm_package_directories_src | snazzy",
+    "test:unit": "ava $npm_package_directories_test",
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebinsua/redux-saga-helpers.git"
+  },
+  "keywords": [
+    "redux",
+    "saga",
+    "generators",
+    "error",
+    "handlers"
+  ],
+  "author": "Seb Insua <me@sebinsua.com>",
+  "license": "Unlicense",
+  "bugs": {
+    "url": "https://github.com/sebinsua/redux-saga-helpers/issues"
+  },
+  "homepage": "https://github.com/sebinsua/redux-saga-helpers#readme",
+  "ava": {
+    "require": [
+      "babel-register"
+    ],
+    "babel": "inherit"
+  },
+  "standard": {
+    "parser": "babel-eslint"
+  },
+  "peerDependencies": {
+    "redux-saga": "^0.11.1"
+  },
+  "dependencies": {
+    "babel-runtime": "^6.11.6",
+    "fn-name": "^2.0.1",
+    "redux-actions": "^0.12.0",
+    "snake-case": "^2.1.0"
+  },
+  "devDependencies": {
+    "ava": "^0.16.0",
+    "babel-eslint": "^6.1.2",
+    "babel-plugin-transform-runtime": "^6.15.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-es2015-rollup": "^1.1.1",
+    "babel-preset-stage-2": "^6.13.0",
+    "babelrc-rollup": "^3.0.0",
+    "camelcase": "^3.0.0",
+    "redux-saga": "^0.11.1",
+    "rollup": "^0.34.1",
+    "rollup-plugin-babel": "^2.6.1",
+    "snazzy": "^4.0.0",
+    "standard": "^8.0.0"
+  }
+}

@@ -1,6 +1,6 @@
-import getFunctionName from 'fn-name'
 import { call } from 'redux-saga'
 
+import generateWrappedFunctionName from './generateWrappedFunctionName'
 import toResult from './toResult'
 
 export function createBooleanCallHandler (handleSuccess, handleError) {
@@ -13,10 +13,9 @@ export function createBooleanCallHandler (handleSuccess, handleError) {
         yield call(handleError, error)
       }
     }
-    booleanCallHandler.displayName = `${getFunctionName(booleanCallHandler)}(${getFunctionName(fn)})`
+    booleanCallHandler.displayName = generateWrappedFunctionName(booleanCallHandler, fn)
     return booleanCallHandler
   }
-  wrapFunctionWithBooleanCallHandler.displayName = `${getFunctionName(wrapFunctionWithBooleanCallHandler)}(${getFunctionName(fn)})`
   return wrapFunctionWithBooleanCallHandler
 }
 

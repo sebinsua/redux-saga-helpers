@@ -1,0 +1,8 @@
+src/
+test/
+examples/
+.babelrc
+.editorconfig
+.npmignore
+.travis.yml
+rollup.config.js

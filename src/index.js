@@ -5,4 +5,4 @@ export * from './toResult'
 export * from './Result'
 export * from './match'
 
-export default from './createBooleanCallHandler'
+export default from './emitActions'

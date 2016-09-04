@@ -1,9 +1,10 @@
+import { call } from 'redux-saga'
+
 import { Ok, Err } from './Result'
-import construct from './construct'
 
 export default function match (result) {
   return {
-    *as(toHandles = {}) {
+    * as (toHandles = {}) {
       if (!toHandles[Ok] || !toHandles[Err]) {
         throw new Error('match-as requires Ok and Err to be defined')
       }
@@ -14,9 +15,9 @@ export default function match (result) {
         handler = toHandles[Ok]
       } else {
         value = result.err
-        defaultErrorHandler = toHandles[Err]
+        const defaultErrorHandler = toHandles[Err]
         handler = defaultErrorHandler
-        for (handlerKey in toHandles) {
+        for (let handlerKey in toHandles) {
           if (handlerKey && handlerKey.err instanceof result.err) {
             handler = toHandles[handlerKey]
           }

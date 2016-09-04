@@ -1,18 +1,15 @@
-import getFunctionName from 'fn-name'
-import snakeCase from 'snake-case'
+import { createAction } from 'redux-actions'
 import { put } from 'redux-saga'
 
+import generateDefaultCallName from './generateDefaultCallName'
+import generateWrappedFunctionName from './generateWrappedFunctionName'
 import createBooleanCallHandler from './createBooleanCallHandler'
-
-function generateDefaultCallName (fn) {
-  return snakeCase(getFunctionName(fn)).toUpperCase() || 'CALL'
-}
 
 export function toActionPutter (actionCreator) {
   function* actionPutter (value) {
     yield put(actionCreator(value))
   }
-  actionPutter.displayName = `${getFunctionName(actionPutter)}(${getFunctionName(actionCreator)})`
+  actionPutter.displayName = generateWrappedFunctionName(actionPutter, actionCreator)
   return actionPutter
 }
 
@@ -25,6 +22,6 @@ export function createEmitActions (successAction, errorAction) {
   }
 }
 
-export const emitActions = createEmitActions()
+export const emitActions = createEmitActions(/* default fallback when we know fn */)
 
 export default emitActions

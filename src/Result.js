@@ -6,20 +6,21 @@ export class Result {
   static Ok = Ok
   static Err = Err
 
-  constructor(value, error) {
+  constructor (value, error) {
     this.ok = value
     this.err = error
   }
 
-  *[Symbol.iterator]() {
-    yield [ ok, err ]
+  * [Symbol.iterator] () {
+    yield this.ok
+    yield this.err
   }
 
-  isOk() {
+  isOk () {
     return !this.err
   }
 
-  isErr() {
+  isErr () {
     return !!this.err
   }
 
@@ -27,7 +28,7 @@ export class Result {
 
 export class Ok extends Result {
 
-  constructor(value) {
+  constructor (value) {
     super(value, null)
   }
 
@@ -35,7 +36,7 @@ export class Ok extends Result {
 
 export class Err extends Result {
 
-  constructor(error) {
+  constructor (error) {
     super(null, error)
   }
 
