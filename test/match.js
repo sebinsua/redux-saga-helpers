@@ -2,6 +2,7 @@ import test from 'ava'
 
 import { Ok, Err } from '../src/Result'
 import match from '../src/match'
+import { call } from 'redux-saga/effects'
 
 class SpecialLibraryError extends Error {
 
@@ -25,29 +26,84 @@ const toHandlers = {
 test('Ok matches the Ok handler', (t) => {
   const okArgs = ['some value']
   const okResult = new Ok(...okArgs)
-  const callInstruction = match(okResult).as(toHandlers)
+  const matchGenerator = match(okResult).as(toHandlers)
+  const value = matchGenerator.next().value
 
-  t.truthy(callInstruction.CALL)
-  t.is(callInstruction.CALL.fn, okHandler)
-  t.deepEqual(callInstruction.CALL.args, okArgs)
+  t.is(value, 'some value some value')
 })
 
 test('Err matches the Err handler', (t) => {
   const errArgs = [new Error('uh oh')]
   const errResult = new Err(...errArgs)
-  const callInstruction = match(errResult).as(toHandlers)
+  const matchGenerator = match(errResult).as(toHandlers)
+  const value = matchGenerator.next().value
 
-  t.truthy(callInstruction.CALL)
-  t.is(callInstruction.CALL.fn, errHandler)
-  t.deepEqual(callInstruction.CALL.args, errArgs)
+  t.is(value, errArgs[0])
 })
 
 test('SpecialLibraryError matches the SpecialLibraryError handler', (t) => {
   const errArgs = [new SpecialLibraryError('uh oh')]
   const errResult = new Err(...errArgs)
-  const callInstruction = match(errResult).as(toHandlers)
+  const matchGenerator = match(errResult).as(toHandlers)
+  const value = matchGenerator.next().value
+
+  t.is(value, `special error handling: ${errArgs[0]}`)
+})
+
+test('Ok matches the Ok generator handler', function * (t) {
+  const expel = [ 'this', 'is', 'getting', 'peculiar!' ]
+  const identity = (v) => v
+  function * okHandlerGenerator (ok) {
+    yield call(identity, expel)
+    return expel
+  }
+  function * errHandlerGenerator (err) {
+    yield call(identity, err)
+    return err
+  }
+
+  const okArgs = ['some value']
+  const okResult = new Ok(...okArgs)
+  const matchGenerator = match(okResult).as({
+    Ok: okHandlerGenerator,
+    Err: errHandlerGenerator
+  })
+  const handlerGenerator = matchGenerator.next().value
+  const callInstruction = handlerGenerator.next().value
 
   t.truthy(callInstruction.CALL)
-  t.is(callInstruction.CALL.fn, specialErrHandler)
+  t.is(callInstruction.CALL.fn, identity)
+  t.deepEqual(callInstruction.CALL.args, [ expel ])
+
+  const returnValue = handlerGenerator.next().value
+  t.is(returnValue, expel)
+})
+
+test('Err matches the Err generator handler', function * (t) {
+  const expel = [ 'this', 'is', 'getting', 'peculiar!' ]
+  const identity = (v) => v
+  function * okHandlerGenerator (ok) {
+    yield call(identity, expel)
+    return expel
+  }
+  function * errHandlerGenerator (err) {
+    yield call(identity, err)
+    return err
+  }
+
+  const errArgs = [new Error('uh oh')]
+  const errResult = new Err(...errArgs)
+  const matchGenerator = match(errResult).as({
+    Ok: okHandlerGenerator,
+    Err: errHandlerGenerator
+  })
+  const handlerGenerator = matchGenerator.next().value
+  const callInstruction = handlerGenerator.next().value
+
+  t.truthy(callInstruction.CALL)
+  t.is(callInstruction.CALL.fn, identity)
   t.deepEqual(callInstruction.CALL.args, errArgs)
+
+  const returnValue = handlerGenerator.next().value
+  t.is(returnValue, errArgs[0])
 })

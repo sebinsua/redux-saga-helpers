@@ -19,7 +19,7 @@ npm install --save redux-saga-helpers
 ### `toResult`
 
 ```js
-import { call, put } from 'redux-saga'
+import { call, put } from 'redux-saga/effects'
 import { toResult } from 'redux-saga-helpers'
 import { fetchProductSuccess, fetchProductError } from './actions'
 
@@ -41,7 +41,7 @@ export function * loadProduct () {
 
 ```js
 import { createAction } from 'redux-actions'
-import { call } from 'redux-saga'
+import { call } from 'redux-saga/effects'
 import { emitActions } from 'redux-saga-helpers'
 
 function fetchProduct (id) {
@@ -49,7 +49,8 @@ function fetchProduct (id) {
 }
 
 export function * loadProduct () {
-  // `emitActions(fetchProduct)` automatically generates a `FETCH_PRODUCT_SUCCESS` and `FETCH_PRODUCT_ERROR` action.
+  // `emitActions(fetchProduct)` automatically generates a
+  // `FETCH_PRODUCT_SUCCESS` or `FETCH_PRODUCT_ERROR` action.
   yield call(emitActions(fetchProduct), 1)
 }
 ```
@@ -58,7 +59,7 @@ export function * loadProduct () {
 
 ```js
 import { createAction } from 'redux-actions'
-import { call } from 'redux-saga'
+import { call } from 'redux-saga/effects'
 import { createEmitActions } from 'redux-saga-helpers'
 
 function fetchProduct (id) {
@@ -77,7 +78,7 @@ export function * loadProduct () {
 
 ```js
 import { createAction } from 'redux-actions'
-import { call } from 'redux-saga'
+import { call } from 'redux-saga/effects'
 import { createBooleanCallHandler, toActionPutter } from 'redux-saga-helpers'
 
 function fetchProduct (id) {
@@ -95,7 +96,7 @@ export function * loadProduct () {
 ### `createMatchAsCallHandler`
 
 ```js
-import { call } from 'redux-saga'
+import { call } from 'redux-saga/effects'
 import { createMatchAsCallHandler } from 'redux-saga-helpers'
 
 function fetchProduct (id) {
@@ -118,6 +119,7 @@ export function * loadProduct () {
 ### `match`
 
 ```js
+import { call } from 'redux-saga/effects'
 import { toResult, match } from 'redux-saga-helpers'
 
 function fetchProduct (id) {
@@ -125,11 +127,12 @@ function fetchProduct (id) {
 }
 
 export function * testMatch () {
+  const log = console.log.bind(console)
   const fetchProductAsResult = toResult(fetchProduct)
   const result = yield fetchProductAsResult(1)
-  return match(result).as({
-    Ok: (value) => `${value} ${value}`,
-    Err: (err) => err,
+  return yield match(result).as({
+    Ok: (value) => call(log, `${value} ${value}`),
+    Err: (err) => call(log, err),
   })
 }
 ```

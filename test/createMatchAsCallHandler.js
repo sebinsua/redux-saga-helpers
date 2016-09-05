@@ -2,9 +2,9 @@ import test from 'ava'
 
 import createMatchAsCallHandler from '../src/createMatchAsCallHandler'
 import { toActionPutter } from '../src/emitActions'
+import toResult from '../src/toResult'
 import { createAction } from 'redux-actions'
 import { Ok, Err } from '../src/Result'
-import match from '../src/match'
 
 function expectName (name) {
   if (name) {
@@ -31,10 +31,19 @@ test('createMatchAsCallHandler() will yield a call instruction containing handle
   // It can cause functions within the call instruction to get called early with bad arguments.
   // By default we wish to just return the effect without doing anything to it.
   const generator = matchAsCallHandler(name)
-  generator.next()
 
-  const event = generator.next(result)
-  t.deepEqual(event.value, match(result).as(toHandles))
+  const expectNameEffect = generator.next().value
+  t.truthy(expectNameEffect.CALL)
+  t.is(expectNameEffect.CALL.fn.displayName, toResult(expectName).displayName)
+  t.deepEqual(expectNameEffect.CALL.args, [ name ])
+
+  const okHandlerGenerator = generator.next(result).value
+  const withinHandler = okHandlerGenerator.next().value
+
+  const handlerEffect = withinHandler.next().value
+  t.truthy(handlerEffect.CALL)
+  t.is(handlerEffect.CALL.fn, handleSuccess)
+  t.deepEqual(handlerEffect.CALL.args, [ `Hey ${name}` ])
 
   const returnValue = generator.next().value
   t.is(returnValue, result)
@@ -53,10 +62,19 @@ test('createMatchAsCallHandler() will yield a call instruction containing handle
   const matchAsCallHandler = wrapFunctionWithMatchAsCallHandler(expectName)
 
   const generator = matchAsCallHandler()
-  generator.next()
 
-  const event = generator.next(result)
-  t.deepEqual(event.value, match(result).as(toHandles))
+  const expectNameEffect = generator.next().value
+  t.truthy(expectNameEffect.CALL)
+  t.is(expectNameEffect.CALL.fn.displayName, toResult(expectName).displayName)
+  t.deepEqual(expectNameEffect.CALL.args, [])
+
+  const okHandlerGenerator = generator.next(result).value
+  const withinHandler = okHandlerGenerator.next().value
+
+  const handlerEffect = withinHandler.next().value
+  t.truthy(handlerEffect.CALL)
+  t.is(handlerEffect.CALL.fn, handleError)
+  t.deepEqual(handlerEffect.CALL.args, [ 'Uh oh!' ])
 
   const returnValue = generator.next().value
   t.is(returnValue, result)
