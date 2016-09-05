@@ -15,7 +15,7 @@ class SpecialLibraryError extends Error {
 
 const okHandler = (value) => `${value} ${value}`
 const errHandler = (err) => err
-const specialErrHandler = (err) => 'special error handling'
+const specialErrHandler = (err) => `special error handling: ${err}`
 const toHandlers = {
   Ok: okHandler,
   Err: errHandler,
