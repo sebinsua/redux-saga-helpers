@@ -6,12 +6,13 @@ import toResult from './toResult'
 export function createBooleanCallHandler (handleSuccess, handleError) {
   function wrapFunctionWithBooleanCallHandler (fn) {
     function * booleanCallHandler (...args) {
-      const [ ok, error ] = yield call(toResult(fn), ...args)
-      if (!error) {
-        yield call(handleSuccess, ok)
+      const result = yield call(toResult(fn), ...args)
+      if (result.isOk()) {
+        yield call(handleSuccess, result.ok)
       } else {
-        yield call(handleError, error)
+        yield call(handleError, result.err)
       }
+      return result
     }
     booleanCallHandler.displayName = generateWrappedFunctionName(booleanCallHandler, fn)
     return booleanCallHandler

@@ -31,9 +31,13 @@ test('createMatchAsCallHandler() will yield a call instruction containing handle
   // It can cause functions within the call instruction to get called early with bad arguments.
   // By default we wish to just return the effect without doing anything to it.
   const generator = matchAsCallHandler(name)
-  let event = generator.next()
-  event = generator.next(result)
+  generator.next()
+
+  const event = generator.next(result)
   t.deepEqual(event.value, match(result).as(toHandles))
+
+  const returnValue = generator.next().value
+  t.is(returnValue, result)
 })
 
 test('createMatchAsCallHandler() will yield a call instruction containing handleError() if fn() errored', (t) => {
@@ -49,7 +53,11 @@ test('createMatchAsCallHandler() will yield a call instruction containing handle
   const matchAsCallHandler = wrapFunctionWithMatchAsCallHandler(expectName)
 
   const generator = matchAsCallHandler()
-  let event = generator.next()
-  event = generator.next(result)
+  generator.next()
+
+  const event = generator.next(result)
   t.deepEqual(event.value, match(result).as(toHandles))
+
+  const returnValue = generator.next().value
+  t.is(returnValue, result)
 })

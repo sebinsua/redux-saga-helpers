@@ -9,6 +9,7 @@ export function createMatchAsCallHandler (toHandles = {}) {
     function * matchAsCallHandler (...args) {
       const result = yield call(toResult(fn), ...args)
       yield match(result).as(toHandles)
+      return result
     }
     matchAsCallHandler.displayName = generateWrappedFunctionName(matchAsCallHandler, fn)
     return matchAsCallHandler

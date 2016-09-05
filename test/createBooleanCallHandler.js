@@ -2,6 +2,7 @@ import test from 'ava'
 
 import createBooleanCallHandler from '../src/createBooleanCallHandler'
 import { toActionPutter } from '../src/emitActions'
+import { Ok, Err } from '../src/Result'
 import { createAction } from 'redux-actions'
 import { call } from 'redux-saga/effects'
 
@@ -16,7 +17,7 @@ function expectName (name) {
 test('booleanCallHandler() will yield a call instruction containing handleSuccess() if fn() did not error', (t) => {
   const name = 'Alex'
   const ok = `Hello ${name}`
-  const err = null
+  const result = new Ok(ok)
 
   const handleSuccess = toActionPutter(createAction('CALL_SUCCESS'))
   const handleError = toActionPutter(createAction('CALL_ERROR'))
@@ -28,13 +29,17 @@ test('booleanCallHandler() will yield a call instruction containing handleSucces
   // By default we wish to just return the effect without doing anything to it.
   const generator = booleanCallHandler(name)
   generator.next()
-  const event = generator.next([ ok, err ])
+
+  const event = generator.next(result)
   t.deepEqual(event.value, call(handleSuccess, ok))
+
+  const returnValue = generator.next().value
+  t.is(returnValue, result)
 })
 
 test('booleanCallHandler() will yield a call instruction containing handleError() if fn() errored', (t) => {
-  const ok = null
   const err = new Error('Uh oh!')
+  const result = new Err(err)
 
   const handleSuccess = toActionPutter(createAction('CALL_SUCCESS'))
   const handleError = toActionPutter(createAction('CALL_ERROR'))
@@ -42,7 +47,11 @@ test('booleanCallHandler() will yield a call instruction containing handleError(
   const booleanCallHandler = wrapFunctionWithBooleanCallHandler(expectName)
 
   const generator = booleanCallHandler()
-  let event = generator.next()
-  event = generator.next([ ok, err ])
+  generator.next()
+
+  const event = generator.next(result)
   t.deepEqual(event.value, call(handleError, err))
+
+  const returnValue = generator.next().value
+  t.is(returnValue, result)
 })
