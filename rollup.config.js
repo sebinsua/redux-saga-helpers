@@ -6,7 +6,7 @@ const pkg = require('./package.json')
 
 export default {
   entry: pkg.entry || 'src/index.js',
-  plugins: [ babel(babelrc()) ],
+  plugins: [ babel(Object.assign({ runtimeHelpers: true }, babelrc())) ],
   targets: [
     {
       dest: pkg['main'],
