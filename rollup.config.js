@@ -1,12 +1,22 @@
 import babel from 'rollup-plugin-babel'
-import babelrc from 'babelrc-rollup'
 import camelCase from 'camelcase'
 
 const pkg = require('./package.json')
 
 export default {
   entry: pkg.entry || 'src/index.js',
-  plugins: [ babel(Object.assign({ runtimeHelpers: true }, babelrc())) ],
+  exports: 'named',
+  plugins: [
+    babel({
+      'runtimeHelpers': true,
+      'plugins': [ 'transform-runtime', 'external-helpers' ],
+      'presets': [
+        [ 'es2015', { 'modules': false } ],
+        [ 'stage-2' ]
+      ],
+      'babelrc': false
+    })
+  ],
   targets: [
     {
       dest: pkg['main'],
