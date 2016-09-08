@@ -1,7 +1,7 @@
 # redux-saga-helpers
 > Error-handling for `redux-saga`
 
-This library provides a selection of small utilities to help better handle sagas.
+This library provides a selection of small utilities to better handle sagas.
 
 ## Why?
 
