@@ -1,15 +1,20 @@
-import { createAction } from 'redux-actions'
+import createAction from '@f/create-action'
 import { put } from 'redux-saga/effects'
 
 import generateDefaultCallName from './generateDefaultCallName'
 import generateWrappedFunctionName from './generateWrappedFunctionName'
 import createBooleanCallHandler from './createBooleanCallHandler'
 
+function hasDefaultToString (fn) {
+  return typeof fn === 'function' && fn.toString().indexOf('function') !== -1
+}
+
 export function toActionPutter (actionCreator) {
   function * actionPutter (value) {
     yield put(actionCreator(value))
   }
-  actionPutter.displayName = generateWrappedFunctionName(actionPutter, actionCreator, `${actionCreator}`)
+  const overrideWrapped = hasDefaultToString(actionCreator) ? false : `${actionCreator}`
+  actionPutter.displayName = generateWrappedFunctionName(actionPutter, actionCreator, overrideWrapped)
   return actionPutter
 }
 

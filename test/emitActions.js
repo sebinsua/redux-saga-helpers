@@ -1,7 +1,7 @@
 import test from 'ava'
 
 import emitActions, { toActionPutter, createEmitActions } from '../src/emitActions'
-import { createAction } from 'redux-actions'
+import createAction from '@f/create-action'
 import { Ok, Err } from '../src/Result'
 import { put } from 'redux-saga/effects'
 

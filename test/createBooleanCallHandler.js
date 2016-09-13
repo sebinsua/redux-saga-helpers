@@ -3,7 +3,7 @@ import test from 'ava'
 import createBooleanCallHandler from '../src/createBooleanCallHandler'
 import { toActionPutter } from '../src/emitActions'
 import { Ok, Err } from '../src/Result'
-import { createAction } from 'redux-actions'
+import createAction from '@f/create-action'
 import { call } from 'redux-saga/effects'
 
 function expectName (name) {

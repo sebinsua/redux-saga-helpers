@@ -3,7 +3,7 @@ import test from 'ava'
 import createMatchAsCallHandler from '../src/createMatchAsCallHandler'
 import { toActionPutter } from '../src/emitActions'
 import toResult from '../src/toResult'
-import { createAction } from 'redux-actions'
+import createAction from '@f/create-action'
 import { Ok, Err } from '../src/Result'
 
 function expectName (name) {

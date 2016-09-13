@@ -46,9 +46,9 @@
     "redux-saga": "^0.11.1"
   },
   "dependencies": {
+    "@f/create-action": "^1.1.1",
     "babel-runtime": "^6.11.6",
     "fn-name": "^2.0.1",
-    "redux-actions": "^0.12.0",
     "snake-case": "^2.1.0"
   },
   "devDependencies": {
