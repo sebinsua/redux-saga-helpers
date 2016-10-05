@@ -1,4 +1,4 @@
-export default function match (result) {
+export function match (result) {
   return {
     // NOTE: The keys of toHandles are strings; if we need to match a specific
     //       error name then the error must have a string `name` property.
@@ -30,3 +30,5 @@ export default function match (result) {
     }
   }
 }
+
+export default match
