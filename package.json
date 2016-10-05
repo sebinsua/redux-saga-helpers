@@ -1,6 +1,6 @@
 {
   "name": "redux-saga-helpers",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Error-handling for redux-saga",
   "main": "dist/index.js",
   "jsnext:main": "dist/index.es",
