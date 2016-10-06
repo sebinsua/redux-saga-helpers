@@ -9,10 +9,10 @@ export function toResult (fn) {
   function * wrapFunctionWithToResult (...args) {
     try {
       const out = yield fn(...args)
-      if (!out.then) {
-        return toOk(out)
-      } else {
+      if (out && out.then) {
         return out.then(toOk, toErr)
+      } else {
+        return toOk(out)
       }
     } catch (err) {
       return toErr(err)
